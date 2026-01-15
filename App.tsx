@@ -17,7 +17,7 @@ import AdminDashboard from './pages/Admin/Dashboard';
 import { Settings as SettingsIcon } from 'lucide-react';
 
 const App: React.FC = () => {
-  const [view, setView] = useState<string>(window.location.hash.replace('#/', '') || 'home');
+  const [view, setView] = useState<string>(() => window.location.hash.replace('#/', '') || 'home');
   const [events, setEvents] = useState<Event[]>(MOCK_EVENTS);
   const [meals, setMeals] = useState<Meal[]>(MOCK_MEALS);
   const [faq, setFaq] = useState<FAQCategory[]>(MOCK_FAQ);
@@ -25,10 +25,15 @@ const App: React.FC = () => {
   const [places, setPlaces] = useState<ExplorePlace[]>(MOCK_ATTRACTIONS);
   const [restaurants, setRestaurants] = useState<Restaurant[]>(MOCK_RESTAURANTS);
   
-  // App Global Settings
+  // App Global Settings with Safety Checks
   const [notice, setNotice] = useState<Notice>(() => {
-    const saved = localStorage.getItem('gimpo_notice');
-    return saved ? JSON.parse(saved) : { 
+    try {
+      const saved = localStorage.getItem('gimpo_notice');
+      if (saved) return JSON.parse(saved);
+    } catch (e) {
+      console.error('Failed to parse notice from localStorage', e);
+    }
+    return { 
       message: '오늘 저녁 식사 시간이 30분 앞당겨졌습니다. (Dinner starts 30m early today)', 
       active: true, 
       updatedAt: new Date().toISOString() 
@@ -36,8 +41,13 @@ const App: React.FC = () => {
   });
 
   const [headerText, setHeaderText] = useState(() => {
-    const saved = localStorage.getItem('gimpo_header');
-    return saved ? JSON.parse(saved) : { line1: 'WELCOME', line2: 'SKE 197' };
+    try {
+      const saved = localStorage.getItem('gimpo_header');
+      if (saved) return JSON.parse(saved);
+    } catch (e) {
+      console.error('Failed to parse headerText from localStorage', e);
+    }
+    return { line1: 'WELCOME', line2: 'SKE 197' };
   });
 
   const [isAdmin, setIsAdmin] = useState(false);
