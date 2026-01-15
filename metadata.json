@@ -1,0 +1,7 @@
+{
+  "name": "Gimpo Hall Student Portal",
+  "description": "A mobile-first student portal for foreign students at Gimpo Assembly Hall, featuring schedules, meal plans, dormitory services, and admin management.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
